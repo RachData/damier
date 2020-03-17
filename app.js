@@ -5,6 +5,11 @@ const passport = require('passport');
 const flash = require('connect-flash');
 const session = require('express-session');
 const app = express();
+mongoose.connect('mongodb+srv://acces:acces2019@dbdame-tlsv3.mongodb.net/test?retryWrites=true&w=majority',
+  { useNewUrlParser: true,
+    useUnifiedTopology: true })
+  .then(() => console.log('Connexion à MongoDB réussie !'))
+  .catch(() => console.log('Connexion à MongoDB échouée !'));
 
 // Passport Config
 require('./config/passport')(passport);
