@@ -1,4 +1,7 @@
 const mongoose = require('mongoose');
+const MongoClient = mongoose.MongoClient;
+
+const client = new MongoClient(uri, { useNewUrlParser: true });
 
  const UserSchema = new mongoose.Schema({
   name: {
