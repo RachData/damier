@@ -6,35 +6,36 @@ const passport = require('passport');
 const User = require('../models/User');
 const { forwardAuthenticated } = require('../config/auth');
 
-// on definit la route vers la page d'aceuill en s
+// on definit la route vers la page d'aceuill en s'assurant que l'user s'est authentifié
 router.get('/login', forwardAuthenticated, (req, res) => res.render('login'));
 
-// Register Page
+// on definit la route vers la page de connexion en s'assurant que l'user s'est authentifié
 router.get('/register', forwardAuthenticated, (req, res) => res.render('register'));
 
-// Register
+// c'est a ce niveau que ce fait la gestion du formulaire
+
 router.post('/register', (req, res) => {
   const { name, email, password, password2 } = req.body;
-  let errors = [];
+  let errors = [];//declaration d'une variable locale qui memeorise les erreurs lors de l'enregistrement de l'user
 
   if (!name || !email || !password || !password2) {
-    errors.push({ msg: 'Please enter all fields' });
+    errors.push({ msg: 'Svp entrer tous les champs requis' });
   }
 
   if (password != password2) {
-    errors.push({ msg: 'Passwords do not match' });
+    errors.push({ msg: 'les deux mots de passes ne correspondent pas' });
   }
 
   if (name.length < 256) {
-    errors.push({ msg: 'name  must be at less 256 characters' });
+    errors.push({ msg: 'la taille de champ nom ne doit pas depasser 256 caractères' });
   }
   if (password.length < 6 && password.length <32) {
-    errors.push({ msg: 'Password must be at least 6 characters' });
+    errors.push({ msg: 'Votre mot de passe doit contenir au minimum 8 caractères' });
   }
   if (password.length >32) {
-    errors.push({ msg: 'Password must be less 32 characters' });
+    errors.push({ msg: 'la taille de votre mot de passe ne doit depassé plus de 32 ' });
   }
-
+//si il ya eu des erreurs on les passe a la page register avec  name ,email etc
   if (errors.length > 0) {
     res.render('register', {
       errors,
@@ -46,7 +47,7 @@ router.post('/register', (req, res) => {
   } else {
     User.findOne({ email: email }).then(user => {
       if (user) {
-        errors.push({ msg: 'Email already exists' });
+        errors.push({ msg: 'Email déja existants' });
         res.render('register', {
           errors,
           name,
