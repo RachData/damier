@@ -13,16 +13,17 @@ module.exports = function(passport) {
         email: email
       }).then(user => {
         if (!user) {
-          return done(null, false, { message: 'That email is not registered' });
+          return done(null, false, { message: 'cet email n '/'est pas enregistré' });
         }
 
-        // on verifie la coresspondance des mots de passe hachés
+        // on verifie la coresspondance des mots de passe hachés remarque: l'orsque les mots de passes ne sont pas identiques
+        //pour une notion de securité on precise juste à l'user que les identifiants saisis sont incorrectes
         bcrypt.compare(password, user.password, (err, isMatch) => {
           if (err) throw err;
           if (isMatch) {
             return done(null, user);
           } else {
-            return done(null, false, { message: 'incorrect identifier ' });
+            return done(null, false, { message: 'Les identifiants saisis sont incorrectes ' });
           }
         });
       });

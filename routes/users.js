@@ -2,11 +2,11 @@ const express = require('express');
 const router = express.Router();
 const bcrypt = require('bcryptjs');
 const passport = require('passport');
-// Load User model
+// chargement du modele 
 const User = require('../models/User');
 const { forwardAuthenticated } = require('../config/auth');
 
-// Login Page
+// on definit la route vers la page d'aceuill en s
 router.get('/login', forwardAuthenticated, (req, res) => res.render('login'));
 
 // Register Page

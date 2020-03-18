@@ -1,6 +1,6 @@
 /*
-dans cette partie on permet à la fonction ensureAuthenticated et forwardAuthenticated d'etre visible dans les autres 
-packages en gros ces deux fonctions assurent que l'utilisateur s'est authentifié avant d'acceder aux ressources 
+dans cette partie on permet aux constantes ensureAuthenticated et forwardAuthenticated d'etre visible dans les autres 
+packages en gros ces deux constantes assurent que l'utilisateur s'est authentifié avant d'acceder aux ressources 
 
 */
 module.exports = {
@@ -8,7 +8,7 @@ module.exports = {
     if (req.isAuthenticated()) {
       return next();
     }
-    req.flash('error_msg', 'Please log in to view that resource');
+    req.flash('error_msg', 'Svp conectez vous pour acceder aux ressources');
     res.redirect('/users/login');
   },
   forwardAuthenticated: function(req, res, next) {
