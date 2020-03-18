@@ -25,8 +25,14 @@ router.post('/register', (req, res) => {
     errors.push({ msg: 'Passwords do not match' });
   }
 
-  if (password.length < 6) {
+  if (name.length < 256) {
+    errors.push({ msg: 'name  must be at less 256 characters' });
+  }
+  if (password.length < 6 && password.length <32) {
     errors.push({ msg: 'Password must be at least 6 characters' });
+  }
+  if (password.length >32) {
+    errors.push({ msg: 'Password must be less 32 characters' });
   }
 
   if (errors.length > 0) {
