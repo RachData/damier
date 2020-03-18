@@ -61,17 +61,17 @@ router.post('/register', (req, res) => {
           email,
           password
         });
-
-        bcrypt.genSalt(10, (err, salt) => {
+//on hash le mot de passe que l'on stocke
+        bcrypt.genSalt(10, (err, salt) => { //Longueur de salt à générer par défaut à 10
           bcrypt.hash(newUser.password, salt, (err, hash) => {
             if (err) throw err;
             newUser.password = hash;
-            newUser
+            newUser//on stocke dans la BD
               .save()
               .then(user => {
                 req.flash(
                   'success_msg',
-                  'You are now registered and can log in'
+                  'vous etes maintenant enregistrez avec succes'
                 );
                 res.redirect('/users/login');
               })
@@ -95,7 +95,7 @@ router.post('/login', (req, res, next) => {
 // Logout
 router.get('/logout', (req, res) => {
   req.logout();
-  req.flash('success_msg', 'You are logged out');
+  req.flash('success_msg', 'Vous etes bien deconnecté');
   res.redirect('/users/login');
 });
 
