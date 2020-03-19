@@ -1,7 +1,7 @@
 /* Dans cette partie on cree un nouvel objet qui represent notre user avec les champs name,email,password,date */
 const mongoose = require('mongoose');
 
- const UserSchema = new mongoose.Schema({
+const UserSchema = new mongoose.Schema({
   name: {
     type: String,
     required: true
