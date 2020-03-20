@@ -1,5 +1,5 @@
 <div class="row mt-5">
-  <div class="col-md-6 m-auto">
+  <div class="col-md6- m-auto">
     <div class="card card-body">
       <h1 class="text-center mb-3">
         <i class="fas fa-user-plus"></i> Register
@@ -39,7 +39,7 @@
             value="<%= typeof password != 'undefined' ? password : '' %>"
           />
         </div>
-        <div class="form-group">
+        <div >
           <label for="password2">Confirm Password</label>
           <input
             type="password"
@@ -55,12 +55,13 @@
         <div class="g-recaptcha" data-sitekey="6Lc1m-IUAAAAAKMBN8L8rJ4eUzPHSPRYb8DhvKj5"></div>
 
       </form>
-        </divbr>
+        </br>
         <button type="submit" class="btn btn-primary btn-block">
           Register
-        </button>
+        </button>       
       </form>
       <p class="lead mt-4">Have An Account? <a href="/users/login">Login</a></p>
+      
     </div>
    </div>
 
