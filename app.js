@@ -64,9 +64,44 @@ app.use('/users', require('./routes/users.js'));
 const http = require('http');
 
 
-app.get("/", (request, response) => {
+app.get("/", (request, response,next) => {
   console.log(Date.now() + " Ping Received");
   response.sendStatus(200);
+  next();
+});
+
+//captacha
+const { stringify } = require('querystring');
+
+
+app.use(express.json());
+
+app.get('/', (_, res) => res.sendFile(__dirname + '/register.ejs'));
+
+app.post('/register', async (req, res) => {
+  if (!req.body.captcha)
+    return res.json({ success: false, msg: 'Please select captcha' });
+
+  // Secret key
+  const secretKey = "6LfKmeIUAAAAAHP_xM3CSRn3YzroBInE3NOoKOxD";
+
+  // Verify URL
+  const query = stringify({
+    secret: secretKey,
+    response: req.body.captcha,
+    remoteip: req.connection.remoteAddress
+  });
+  const verifyURL = `https://google.com/recaptcha/api/siteverify?${query}`;
+
+  // Make a request to verifyURL
+  const body = await fetch(verifyURL).then(res => res.json());
+
+  // If not successful
+  if (body.success !== undefined && !body.success)
+    return res.json({ success: false, msg: 'Failed captcha verification' });
+
+  // If successful
+  return res.json({ success: true, msg: 'Captcha passed' });
 });
 app.listen(process.env.PORT);
 setInterval(() => {
