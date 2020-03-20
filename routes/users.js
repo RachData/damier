@@ -25,10 +25,10 @@ router.post('/register', (req, res) => {
   if (password != password2) {
     errors.push({ msg: 'les deux mots de passes ne correspondent pas' });
   }
-
+/*
   if (name.length < 256) {
     errors.push({ msg: 'la taille de champ nom ne doit pas depasser 256 caractères' });
-  }
+  }*/
   if (password.length < 6 && password.length <32) {
     errors.push({ msg: 'Votre mot de passe doit contenir au minimum 8 caractères' });
   }

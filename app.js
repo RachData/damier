@@ -83,7 +83,7 @@ app.post('/views/register', async (req, res) => {
     return res.json({ success: false, msg: 'Please select captcha' });
 
   // Secret key
-  const secretKey ="6LcAm-IUAAAAACAcNFfvAZmkpoRNFo4dj6WqIF2c";
+  const secretKey ="6Lc1m-IUAAAAAKk4h6ro34SLNPnu8PHbr8rEgZse";
 
   // Verify URL
   const query = stringify({
