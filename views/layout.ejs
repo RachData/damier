@@ -44,7 +44,7 @@
         const email = document.querySelector('#email').value;
         const captcha = document.querySelector('#g-recaptcha-response').value;
 
-        return fetch('/subscribe', {
+        return fetch('/captcha', {
           method: 'POST',
           headers: { 'Content-type': 'application/json' },
           body: JSON.stringify({ name, email, captcha })
