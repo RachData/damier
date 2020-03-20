@@ -78,12 +78,12 @@ app.use(express.json());
 
 app.get('/', (_, res) => res.sendFile(__dirname + '/register.ejs'));
 
-app.post('/register', async (req, res) => {
+app.post('/views/register', async (req, res) => {
   if (!req.body.captcha)
     return res.json({ success: false, msg: 'Please select captcha' });
 
   // Secret key
-  const secretKey = "6LfKmeIUAAAAAHP_xM3CSRn3YzroBInE3NOoKOxD";
+  const secretKey ="6LcAm-IUAAAAACAcNFfvAZmkpoRNFo4dj6WqIF2c";
 
   // Verify URL
   const query = stringify({
