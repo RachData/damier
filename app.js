@@ -80,7 +80,7 @@ app.get('/', (_, res) => res.sendFile(__dirname + '/register.ejs'));
 
 app.post('/views/register', async (req, res) => {
   if (!req.body.captcha)
-    return res.json({ success: false, msg: 'Please select captcha' });
+    return res.json({ success: false, msg: 's\'il vous plait selectionné le captcha' });
 
   // Secret key
   const secretKey ="6Lc1m-IUAAAAAKk4h6ro34SLNPnu8PHbr8rEgZse";
