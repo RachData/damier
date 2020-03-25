@@ -78,7 +78,7 @@ app.use(express.json());
 
 app.get('/', (_, res) => res.sendFile(__dirname + '/register.ejs'));
 
-app.post('/views/register', async (req, res) => {
+app.post('/users/register', async (req, res) => {
   if (!req.body.captcha)
     return res.json({ success: false, msg: 's\'il vous plait selectionné  le captcha' });
 
@@ -98,7 +98,7 @@ app.post('/views/register', async (req, res) => {
 
   // If not successful
   if (body.success !== undefined && !body.success)
-    return res.json({ success: false, msg: 'Failed captcha verification' });
+    return res.json({ success: false, msg: 'Erreur de  verification captcha' });
 
   // If successful
   return res.json({ success: true, msg: 'Captcha passed' });
