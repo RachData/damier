@@ -4,15 +4,27 @@ const mongoose = require('mongoose');
 const passport = require('passport');
 const flash = require('connect-flash');
 const session = require('express-session');
+const path = require('path');
+const http = require('http');
+require('./config/passport')(passport);
+
+var ws = require('ws');//ajouté
+const Users = require('./session/users.js');//ajouté
+
 const app = express();
+
+var connected_users = {};
+
+
+app.use('/Echiquier/Echiquier.html', express.static(path.join(__dirname, 'views/Echiquier')));
+
+
 mongoose.connect('mongodb+srv://acces:acces2019@dbdame-tlsv3.mongodb.net/test?retryWrites=true&w=majority',
   { useNewUrlParser: true,
     useUnifiedTopology: true })
   .then(() => console.log('Connexion à MongoDB réussie !'))
   .catch(() => console.log('Connexion à MongoDB échouée !'));
 
-// Passport Config
-require('./config/passport')(passport);
 
 // DB Config
 const db = require('./config/keys').mongoURI;
@@ -41,7 +53,7 @@ app.use(
     saveUninitialized: true
   })
 );
-
+/*
 // Passport middleware
 app.use(passport.initialize());
 app.use(passport.session());
@@ -55,56 +67,107 @@ app.use(function(req, res, next) {
   res.locals.error_msg = req.flash('error_msg');
   res.locals.error = req.flash('error');
   next();
+});*/
+/******************************         websocket           *********************/
+const User = require('./lib').User;
+
+app.use(express.static('public'));
+//const connected_users = {};
+// We attach express and ws to the same HTTP server
+const server = http.createServer(app);
+const wsserver = new ws.Server({ 
+  server: server,
 });
 
-// Routes
+// Function to broadcast the list of conneted users
+wsserver.broadcastList = () => {
+  wsserver.clients.forEach((client) => {
+    if (client.readyState === ws.OPEN) {
+      client.send(JSON.stringify({
+          type: 'userlist',
+          // We must avoid calling JSON.stringify on the wsconn field
+          // of each user
+          userlist: Object.values(connected_users).map((u) => u.serialize()),
+        }));
+    }
+  });
+};
+
+// We define the WebSocket logic
+wsserver.on('connection', (wsconn) => {
+  console.log('Received new WS connection');
+  let myuser = null;
+  
+  wsconn.on('message', (data) => {
+    const parsed = JSON.parse(data);
+    console.log(parsed);
+    switch (parsed.type) {
+      case 'new_connection':
+        const name = parsed.username;
+        connected_users[name] = myuser = new User(name, wsconn);
+        wsserver.broadcastList();
+        break;
+      case 'challenge':
+        // We check that the invitation is valid
+        const opponent = connected_users[parsed.username];
+        if (opponent && myuser.invite(opponent)) {
+          // We notify each user
+          opponent.wsconn.send(JSON.stringify({
+            type: 'challenge',
+            username: myuser.name,
+          }));
+          wsconn.send(JSON.stringify({
+            type: 'challenge',
+            username: opponent.name,
+          }));
+          wsserver.broadcastList();
+        } else {
+          // We send back an error
+          wsconn.send(JSON.stringify({
+            type: 'challenge_rejected',
+            username: parsed.username,
+          }));
+        }
+        break;
+      case 'quit':
+        const game = myuser.quit();
+        if (game) {
+          for (let p of ['player1', 'player2']) {
+            game[p].wsconn.send(JSON.stringify({
+              type: 'quit',
+            }));
+          }
+          wsserver.broadcastList();
+        } else {
+          wsconn.send(JSON.stringify({
+            type: 'error',
+            message: 'Cannot quit',
+          }));
+        }
+      default:
+        console.error('Bad message', parsed);
+    }  
+  });
+  
+  wsconn.on('close', () => {
+    if (myuser !== null) {
+      delete connected_users[myuser.name];
+      wsserver.broadcastList();
+    }
+  });
+});
+
+app.use('/',(req,res)=> res.sendFile(path.resolve('public/index.html')));
+
+/*
 app.use('/', require('./routes/index.js'));
 app.use('/users', require('./routes/users.js'));
-
-const http = require('http');
-
-
-app.get("/", (request, response,next) => {
-  console.log(Date.now() + " Ping Received");
-  response.sendStatus(200);
-  next();
-});
-
-//captacha
-const { stringify } = require('querystring');
-
-
-app.use(express.json());
-
-app.get('/', (_, res) => res.sendFile(__dirname + '/register.ejs'));
-
-app.post('/users/register', async (req, res) => {
-  if (!req.body.captcha)
-    return res.json({ success: false, msg: 's\'il vous plait selectionné  le captcha' });
-
-  // Secret key
-  const secretKey ="6Lc1m-IUAAAAAKk4h6ro34SLNPnu8PHbr8rEgZse";
-
-  // Verify URL
-  const query = stringify({
-    secret: secretKey,
-    response: req.body.captcha,
-    remoteip: req.connection.remoteAddress
-  });
-  const verifyURL = `https://google.com/recaptcha/api/siteverify?${query}`;
-
-  // Make a request to verifyURL
-  const body = await fetch(verifyURL).then(res => res.json());
-
-  // If not successful
-  if (body.success !== undefined && !body.success)
-    return res.json({ success: false, msg: 'Erreur de  verification captcha' });
-
-  // If successful
-  return res.json({ success: true, msg: 'Captcha passed' });
-});
-app.listen(process.env.PORT);
+app.use('/Echiquier',require('./routes/users.js'));
+*/
+app.listen(process.env.PORT||3000);
 setInterval(() => {
   http.get(`http://${process.env.PROJECT_DOMAIN}.glitch.me/`);
 }, 280000);
+
+
 

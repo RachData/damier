@@ -1,3 +1,96 @@
+
+<!DOCTYPE html>
+<html>
+<head>
+  <link rel="stylesheet" type="text/css" href="liste.css">
+<style>
+table {
+  font-family: arial, sans-serif;
+  border-collapse: collapse;
+  width: 100%;
+}
+
+td, th {
+  border: 1px solid #dddddd;
+  text-align: left;
+  padding: 8px;
+}
+
+tr:nth-child(even) {
+  background-color: #dddddd;
+}
+</style>
+</head>
+<body>
+
+    <header id="container">
+  <nav class="menu">
+    <div id="logo_recherche">
+      <img src="https://cdn.glitch.com/92de824e-f10e-43a2-b6ef-2296b49d050c%2Fimage016.jpg?1558014603781">
+      <form method="get" action="">
+        <input type="search" name="q" placeholder="Rechercher un Membre">
+        <input type="submit" value="OK">
+      </form>
+    </div>
+    <ul>
+      <li>
+        <a href="/profil"><%= user.name %></a>
+      </li>
+      <li>
+        <a href="/userConnecter">Membres connectés</a>
+      </li>
+      <li>
+        <a href="/apropos">A Propos</a>
+      </li>
+      <li>
+        <a id="deconne" href="/userDeconnecter">Deconnexion</a>
+      </li>
+    </ul>
+  </nav>
+  </header>
+
 <h1 class="mt-4">Dashboard</h1>
 <p class="lead mb-3">Welcome to draughts-game <%= user.name %></p>
 <a href="/users/logout" class="btn btn-secondary">Logout</a>
+<h2>HTML Table</h2>
+
+<table>
+  <tr>
+    <th>Company</th>
+    <th>Contact</th>
+    <th>Country</th>
+  </tr>
+  <tr>
+    <td>Alfreds Futterkiste</td>
+    <td>Maria Anders</td>
+    <td>Germany</td>
+  </tr>
+  <tr>
+    <td>Centro comercial Moctezuma</td>
+    <td>Francisco Chang</td>
+    <td>Mexico</td>
+  </tr>
+  <tr>
+    <td>Ernst Handel</td>
+    <td>Roland Mendel</td>
+    <td>Austria</td>
+  </tr>
+  <tr>
+    <td>Island Trading</td>
+    <td>Helen Bennett</td>
+    <td>UK</td>
+  </tr>
+  <tr>
+    <td>Laughing Bacchus Winecellars</td>
+    <td>Yoshi Tannamuri</td>
+    <td>Canada</td>
+  </tr>
+  <tr>
+    <td>Magazzini Alimentari Riuniti</td>
+    <td>Giovanni Rovelli</td>
+    <td>Italy</td>
+  </tr>
+</table>
+
+</body>
+</html>

@@ -8,3 +8,4 @@ Nous rajoutons un dossier Config dans lequel toutes les configuratons liées à 
 le pont d'entré de l'appli est le fichier app.js. On peut bien le lancer en fesant node app.js mais nous l'avons automatisé 
 par le package nodemoon.
 En ce qui concerne les dependances elles sont consignés dans le fichier package.json.
+# damier

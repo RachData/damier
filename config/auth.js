@@ -11,6 +11,7 @@ module.exports = {
     req.flash('error_msg', 'Svp conectez vous pour acceder aux ressources');
     res.redirect('/users/login');
   },
+  
   forwardAuthenticated: function(req, res, next) {
     if (!req.isAuthenticated()) {
       return next();
